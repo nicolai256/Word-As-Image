@@ -33,6 +33,8 @@ baseline:
 conformal_0.5_dist_pixel_100_kernel201:
   parent_config: baseline
   level_of_cc: 1
+  prompt_suffix: "minimal flat 2d vector. lineal color. minimal flat 2d vector. lineal color."
+  batch_size: 1
   loss:
     tone:
       use_tone_loss: true
@@ -43,4 +45,6 @@ conformal_0.5_dist_pixel_100_kernel201:
       use_conformal_loss: true
       angeles_w: 0.5
 
-
+demo:
+  parent_config: conformal_0.5_dist_pixel_100_kernel201
+  token: false
