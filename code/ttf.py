@@ -6,6 +6,7 @@ import freetype as ft
 import pydiffvg
 import torch
 import save_svg
+import os.path as osp
 
 device = torch.device("cuda" if (
         torch.cuda.is_available() and torch.cuda.device_count() > 0) else "cpu")
@@ -221,6 +222,8 @@ def font_string_to_svgs(dest_path, font, txt, size=30, spacing=1.0, target_contr
     f.close()
 
 
+
+
 if __name__ == '__main__':
 
     fonts = ["KaushanScript-Regular"]
@@ -259,7 +262,3 @@ if __name__ == '__main__':
         normalize_letter_size(output_path, font_path, txt)
 
         print("DONE")
-
-
-
-

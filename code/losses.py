@@ -11,13 +11,15 @@ from shapely.geometry.polygon import Polygon
 from diffusers import StableDiffusionPipeline
 
 class SDSLoss(nn.Module):
-    def __init__(self, cfg, device):
+    def __init__(self, cfg, device, model):
         super(SDSLoss, self).__init__()
         self.cfg = cfg
         self.device = device
-        self.pipe = StableDiffusionPipeline.from_pretrained(cfg.diffusion.model,
-                                                       torch_dtype=torch.float16, use_auth_token=cfg.token)
-        self.pipe = self.pipe.to(self.device)
+        # self.pipe = StableDiffusionPipeline.from_pretrained(cfg.diffusion.model,
+        #                                                torch_dtype=torch.float16, use_auth_token=cfg.token)
+
+        # self.pipe = self.pipe.to(self.device)
+        self.pipe=model
         # default scheduler: PNDMScheduler(beta_start=0.00085, beta_end=0.012,
         # beta_schedule="scaled_linear", num_train_timesteps=1000)
         self.alphas = self.pipe.scheduler.alphas_cumprod.to(self.device)
@@ -39,8 +41,8 @@ class SDSLoss(nn.Module):
             uncond_embeddings = self.pipe.text_encoder(uncond_input.input_ids.to(self.device))[0]
         self.text_embeddings = torch.cat([uncond_embeddings, text_embeddings])
         self.text_embeddings = self.text_embeddings.repeat_interleave(self.cfg.batch_size, 0)
-        del self.pipe.tokenizer
-        del self.pipe.text_encoder
+        # del self.pipe.tokenizer
+        # del self.pipe.text_encoder
 
 
     def forward(self, x_aug):

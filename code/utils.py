@@ -151,20 +151,20 @@ def combine_word(word, letter, font, experiment_dir):
     h_min, h_max = min([torch.min(shapes_word[ids].points[:, 1]) for ids in letter_ids]), max(
         [torch.max(shapes_word[ids].points[:, 1]) for ids in letter_ids])
 
-    c_w = (-w_min + w_max) / 2
-    c_h = (-h_min + h_max) / 2
-
+    c_w = (-w_min+w_max)/2
+    c_h = (-h_min+h_max)/2
+    
     svg_result = os.path.join(experiment_dir, "output-svg", "output.svg")
     canvas_width, canvas_height, shapes, shape_groups = pydiffvg.svg_to_scene(svg_result)
 
     out_w_min, out_w_max = min([torch.min(p.points[:, 0]) for p in shapes]), max(
-        [torch.max(p.points[:, 0]) for p in shapes])
+    [torch.max(p.points[:, 0]) for p in shapes])
     out_h_min, out_h_max = min([torch.min(p.points[:, 1]) for p in shapes]), max(
-        [torch.max(p.points[:, 1]) for p in shapes])
+    [torch.max(p.points[:, 1]) for p in shapes])
 
-    out_c_w = (-out_w_min + out_w_max) / 2
-    out_c_h = (-out_h_min + out_h_max) / 2
-
+    out_c_w = (-out_w_min+out_w_max)/2
+    out_c_h = (-out_h_min+out_h_max)/2
+    
     scale_canvas_w = (w_max - w_min) / (out_w_max - out_w_min)
     scale_canvas_h = (h_max - h_min) / (out_h_max - out_h_min)
 
@@ -175,8 +175,8 @@ def combine_word(word, letter, font, experiment_dir):
     else:
         hsize = int((out_h_max - out_h_min) * scale_canvas_w)
         scale_canvas_h = hsize / (out_h_max - out_h_min)
-        shift_h = -out_c_h * scale_canvas_h + c_h
-
+        shift_h = -out_c_h * scale_canvas_h + c_h 
+    
     for num, p in enumerate(shapes):
         p.points[:, 0] = p.points[:, 0] * scale_canvas_w
         p.points[:, 1] = p.points[:, 1] * scale_canvas_h
@@ -186,7 +186,8 @@ def combine_word(word, letter, font, experiment_dir):
         else:
             p.points[:, 0] = p.points[:, 0] - out_w_min * scale_canvas_w + w_min
             p.points[:, 1] = p.points[:, 1] - out_h_min * scale_canvas_h + h_min + shift_h
-
+        
+    
     for j, s in enumerate(letter_ids):
         shapes_word[s] = shapes[j]
 
@@ -194,15 +195,14 @@ def combine_word(word, letter, font, experiment_dir):
         f"{experiment_dir}/{font}_{word}_{letter}.svg", canvas_width, canvas_height, shapes_word,
         shape_groups_word)
 
-    render = pydiffvg.RenderFunction.apply
-    scene_args = pydiffvg.RenderFunction.serialize_scene(canvas_width, canvas_height, shapes_word, shape_groups_word)
-    img = render(canvas_width, canvas_height, 2, 2, 0, None, *scene_args)
-    img = img[:, :, 3:4] * img[:, :, :3] + \
-               torch.ones(img.shape[0], img.shape[1], 3, device="cuda:0") * (1 - img[:, :, 3:4])
-    img = img[:, :, :3]
-    save_image(img, f"{experiment_dir}/{font}_{word}_{letter}.png")
-
-
+    # render = pydiffvg.RenderFunction.apply
+    # scene_args = pydiffvg.RenderFunction.serialize_scene(canvas_width, canvas_height, shapes_word, shape_groups_word)
+    # img = render(canvas_width, canvas_height, 2, 2, 0, None, *scene_args)
+    # img = img[:, :, 3:4] * img[:, :, :3] + \
+    #            torch.ones(img.shape[0], img.shape[1], 3, device="cuda") * (1 - img[:, :, 3:4])
+    # img = img[:, :, :3]
+    # save_image(img, f"{experiment_dir}/{font}_{word}_{letter}.png")
+    
 def create_video(num_iter, experiment_dir, video_frame_freq):
     img_array = []
     for ii in range(0, num_iter):
