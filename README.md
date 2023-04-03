@@ -7,6 +7,10 @@
 [![Huggingface space](https://img.shields.io/badge/🤗-Demo%20-yellow.svg)](https://huggingface.co/spaces/SemanticTypography/Word-As-Image)
 [![Youtube](https://img.shields.io/badge/📽️-Video%20-orchid.svg)](https://www.youtube.com/watch?v=9D12a6RCQaw)
 
+
+run app.py for gradio
+
+
 <br>
 <div align="center">
     <img src="images/teaser.png" width="100%">
